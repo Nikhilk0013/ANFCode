@@ -12,7 +12,18 @@ class ANFExploreCardTableViewControllerTests: XCTestCase {
     var testInstance: ANFExploreCardTableViewController!
     
     override func setUp() {
-        testInstance = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateInitialViewController() as? ANFExploreCardTableViewController
+        let mainStoryboard = UIStoryboard(storyboard: .main)
+        testInstance = mainStoryboard.instantiateViewController(withIdentifier: String(describing: ANFExploreCardTableViewController.self)) as? ANFExploreCardTableViewController
+        let data = productMock.data(using: .utf8)!
+        do {
+            
+            let productsList = try JSONDecoder().decode([Product].self, from: data)
+            testInstance.viewModel = ANFExploreCardViewModel(products: productsList)
+            testInstance.viewModel?.viewDidLoad()
+            
+        } catch let jsonErr {
+            print("Error serializing json:", jsonErr)
+        }
     }
 
     func test_numberOfSections_ShouldBeOne() {
@@ -20,20 +31,21 @@ class ANFExploreCardTableViewControllerTests: XCTestCase {
         XCTAssert(numberOfSections == 1, "table view should have 1 section")
     }
     
-    func test_numberOfRows_ShouldBeTen() {
-        let numberOfRows = testInstance.tableView(testInstance.tableView, numberOfRowsInSection: 0)
-        XCTAssert(numberOfRows == 10, "table view should have 10 cells")
+    func test_numberOfRows_ShouldBeOne() {
+        let numberOfRows = testInstance.viewModel?.numberOfRows()
+        XCTAssert(numberOfRows == 1, "table view should have 1 cells")
     }
     
     func test_cellForRowAtIndexPath_titleText_shouldNotBeBlank() {
-        let firstCell = testInstance.tableView(testInstance.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
-        let title = firstCell.viewWithTag(1) as? UILabel
-        XCTAssert(title?.text?.count ?? 0 > 0, "title should not be blank")
+        guard let firstCell = testInstance.tableView(testInstance.tableView, cellForRowAt: IndexPath(row: 0, section: 0)) as? PramotionCardCell else {
+            return
+        }
+        XCTAssert(firstCell.productTitleLabel.text?.count ?? 0 > 0, "title should not be blank")
     }
     
-    func test_cellForRowAtIndexPath_ImageViewImage_shouldNotBeNil() {
-        let firstCell = testInstance.tableView(testInstance.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
-        let imageView = firstCell.viewWithTag(2) as? UIImageView
-        XCTAssert(imageView?.image != nil, "image view image should not be nil")
+    func testFirstProductItemImageShouldNotBeNil() {
+        let firstCellViewModel = testInstance.viewModel?.cellData(for: 0)
+        let imageURL = firstCellViewModel?.bgImageUrl
+        XCTAssert(!(imageURL?.absoluteString.isEmpty ?? true), "image is not nil")
     }
 }
