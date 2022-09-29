@@ -37,7 +37,7 @@ class ANFExploreCardTableViewControllerTests: XCTestCase {
     }
     
     func test_cellForRowAtIndexPath_titleText_shouldNotBeBlank() {
-        guard let firstCell = testInstance.tableView(testInstance.tableView, cellForRowAt: IndexPath(row: 0, section: 0)) as? PramotionCardCell else {
+        guard let firstCell = testInstance.tableView(testInstance.tableView, cellForRowAt: IndexPath(row: 0, section: 0)) as? PromotionCardCell else {
             return
         }
         XCTAssert(firstCell.productTitleLabel.text?.count ?? 0 > 0, "title should not be blank")

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PramotionCardCell: UITableViewCell {
+class PromotionCardCell: UITableViewCell {
     
     private var cachedImages = [Int: UIImage]()
     

@@ -26,7 +26,7 @@ class ANFExploreCardTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: PramotionCardCell.self), for: indexPath) as? PramotionCardCell,
+        guard let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: PromotionCardCell.self), for: indexPath) as? PromotionCardCell,
             let viewModel = self.viewModel?.cellData(for: indexPath.row) else {
             
             return UITableViewCell()
